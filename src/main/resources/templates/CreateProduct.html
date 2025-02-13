@@ -13,12 +13,12 @@
         <div class="form-group">
             <label for="productName">Name</label>
             <input type="text" th:field="*{productName}" class="form-control mb-4 col-4" id="productName"
-                   placeholder="Enter product name">
+                   placeholder="Enter product name" required>
         </div>
         <div class="form-group">
             <label for="productQuantity">Quantity</label>
             <input type="number" th:field="*{productQuantity}" class="form-control mb-4 col-4" id="productQuantity"
-                   placeholder="Enter product quantity">
+                   placeholder="Enter product quantity" required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
