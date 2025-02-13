@@ -32,4 +32,16 @@ public class ProductRepository {
     public void delete(String id) {
         productData.removeIf(product -> product.getProductId().equals(id));
     }
+
+    public Product update(String id, Product updatedProduct) {
+        for (int i = 0; i < productData.size(); i++) {
+            Product product = productData.get(i);
+            if (product.getProductId().equals(id)) {
+                product.setProductName(updatedProduct.getProductName());
+                product.setProductQuantity(updatedProduct.getProductQuantity());
+                return product;
+            }
+        }
+        return null;
+    }
 }
