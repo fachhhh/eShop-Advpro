@@ -31,4 +31,10 @@ public class ProductController {
         model.addAttribute("products", productService.findAll());
         return "productList";    // this should match the filename without .html
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable String id) {
+        productService.delete(id);
+        return "redirect:/product/list";
+    }
 }
