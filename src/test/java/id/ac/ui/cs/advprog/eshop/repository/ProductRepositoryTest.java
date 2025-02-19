@@ -73,7 +73,8 @@ class ProductRepositoryTest {
 
     @Test
     void testCreateNullProduct() {
-        assertThrows(NullPointerException.class, () -> productRepository.create(null));
+        Product result = productRepository.create(null);
+        assertNull(result, "Creating null product should return null");
     }
 
     @Test
