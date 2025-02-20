@@ -8,6 +8,12 @@ class EShopApplicationTests {
 
     @Test
     void contextLoads() {
+        /*
+         * This test method is intentionally empty.
+         * Its purpose is to verify that the Spring application context
+         * can be loaded successfully during testing.
+         * If the context fails to load, the test will fail automatically.
+         */
     }
 
 }
