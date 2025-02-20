@@ -79,8 +79,15 @@ class ProductRepositoryTest {
 
     @Test
     void testFindProductThatDoesNotExist() {
-        Iterator<Product> products = productRepository.findAll();
-        assertFalse(products.hasNext());  // Ensure repository is empty
+        // Create a product first
+        Product product = new Product();
+        product.setProductName("Test Product");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        // Try to find a product with non-existent ID
+        Product nonExistentProduct = productRepository.findById("non-existent-id");
+        assertNull(nonExistentProduct, "Finding non-existent product should return null");
     }
 
     @Test
