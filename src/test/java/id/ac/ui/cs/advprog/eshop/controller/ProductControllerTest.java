@@ -34,7 +34,7 @@ class ProductControllerTest {
         Model model = new BindingAwareModelMap();
         String viewName = productController.createProduct(model);
 
-        assertEquals("createProduct", viewName);
+        assertEquals("CreateProduct", viewName);
         assertTrue(model.containsAttribute("product"));
     }
 
@@ -63,7 +63,7 @@ class ProductControllerTest {
         Model model = new BindingAwareModelMap();
         String viewName = productController.listProduct(model);
 
-        assertEquals("productList", viewName);
+        assertEquals("ProductList", viewName);
         assertTrue(model.containsAttribute("products"));
         assertEquals(products, model.getAttribute("products"));
     }
@@ -99,7 +99,7 @@ class ProductControllerTest {
         Model model = new BindingAwareModelMap();
         String viewName = productController.editProductForm(id, model);
 
-        assertEquals("editProduct", viewName);
+        assertEquals("EditProduct", viewName);
         assertTrue(model.containsAttribute("product"));
         assertEquals(product, model.getAttribute("product"));
     }
