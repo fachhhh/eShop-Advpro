@@ -181,4 +181,43 @@ class ProductRepositoryTest {
         // Should not throw exception
         assertDoesNotThrow(() -> productRepository.delete("non-existent-id"));
     }
+
+    @Test
+    void testFindByIdReturnsNullWhenIdIsNull() {
+        // This test specifically targets the "if (id == null) { return null; }" condition
+        Product result = productRepository.findById(null);
+        assertNull(result, "findById should return null when id parameter is null");
+    }
+
+    @Test
+    void testUpdateReturnsNullWhenIdIsNull() {
+        // This test specifically targets the first part of "if (id == null || updatedProduct == null) { return null; }"
+        Product updatedDetails = new Product();
+        updatedDetails.setProductName("Updated Name");
+        updatedDetails.setProductQuantity(20);
+
+        Product result = productRepository.update(null, updatedDetails);
+        assertNull(result, "update should return null when id parameter is null");
+    }
+
+    @Test
+    void testUpdateReturnsNullWhenProductIsNull() {
+        // This test specifically targets the second part of "if (id == null || updatedProduct == null) { return null; }"
+        // First create a product to get a valid ID
+        Product product = new Product();
+        product.setProductName("Original Name");
+        product.setProductQuantity(10);
+        Product savedProduct = productRepository.create(product);
+
+        // Then try to update with null product
+        Product result = productRepository.update(savedProduct.getProductId(), null);
+        assertNull(result, "update should return null when updatedProduct parameter is null");
+    }
+
+    @Test
+    void testCreateReturnsNullWhenProductIsNull() {
+        // This test specifically targets the "if (product == null) { return null; }" condition
+        Product result = productRepository.create(null);
+        assertNull(result, "create should return null when product parameter is null");
+    }
 }
