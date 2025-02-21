@@ -13,29 +13,39 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // Define constant for the repeated redirect URL
+    private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+
     @GetMapping("/create")
     public String createProduct(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";  // this should match the filename without .html
+        return "createProduct";
     }
 
     @PostMapping("/create")
     public String createProduct(@ModelAttribute Product product, Model model) {
         productService.create(product);
-        return "redirect:list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @GetMapping("/list")
     public String listProduct(Model model) {
         model.addAttribute("products", productService.findAll());
-        return "productList";    // this should match the filename without .html
+        return "productList";
     }
 
+    // Support both GET and POST for delete to make it more flexible
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable String id) {
+    public String deleteProductGet(@PathVariable String id) {
         productService.delete(id);
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteProductPost(@PathVariable String id) {
+        productService.delete(id);
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @GetMapping("/edit/{id}")
@@ -45,15 +55,15 @@ public class ProductController {
             model.addAttribute("product", product);
             return "editProduct";
         }
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @PostMapping("/edit/{id}")
     public String editProduct(@PathVariable String id, @ModelAttribute Product product, Model model) {
         Product updatedProduct = productService.update(id, product);
         if (updatedProduct != null) {
-            return "redirect:/product/list";
+            return REDIRECT_PRODUCT_LIST;
         }
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 }
