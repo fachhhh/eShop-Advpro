@@ -35,8 +35,15 @@ public class ProductController {
         return "productList";
     }
 
+    // Support both GET and POST for delete to make it more flexible
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable String id) {
+    public String deleteProductGet(@PathVariable String id) {
+        productService.delete(id);
+        return REDIRECT_PRODUCT_LIST;
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteProductPost(@PathVariable String id) {
         productService.delete(id);
         return REDIRECT_PRODUCT_LIST;
     }
