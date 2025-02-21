@@ -2,6 +2,46 @@
 # 2306245030
 # Advanced Programming A
 
+# Tutorial 2
+*1. List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.*
+
+Masalah Kualitas Kode yang Ditemukan dan Diperbaiki:
+1. Perbaikan Penanganan Nilai Null
+    - Masalah: Kode memiliki pemeriksaan null yang tidak konsisten di seluruh repository dan service
+    - Strategi: Menambahkan pemeriksaan null yang komprehensif di ProductRepository dan cakupan pengujian yang tepat:
+
+
+2. Duplikasi Kode dalam Controller
+   - Masalah: String URL redirect yang berulang di ProductController
+   - Strategi: Membuat konstanta untuk menghindari duplikasi seperti
+   ``private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";``
+
+
+3. Kurangnya Pengujian Layer Service
+   - Masalah: Tidak ada cakupan pengujian untuk ProductServiceImpl
+   - Strategi: Membuat suite pengujian komprehensif yang mencakup semua metode service dan kasus-kasus khusus
+
+
+4. Penanganan Error yang Tidak Konsisten
+    - Masalah: Penanganan kasus not-found yang tidak konsisten di controller
+    - Strategi: Standarisasi untuk mengembalikan redirect ke halaman list untuk konsistensi contohnya ``return REDIRECT_PRODUCT_LIST;``
+
+*2. Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!*
+
+Berdasarkan workflows yang sudah saya implementasikan, menurut saya telah memenuhi definisi Continuous Integration (CI) dan juga COntinuous Deployment (CD). Mengapa?
+1. Continuous Integration (CI)
+   - Workflow ci.yml sudah memenuhi prinsip CI dengan menjalankan pengujian otomatis (unit test) setiap kali ada perubahan kode (push atau pull request). Ini memastikan bahwa kode yang saya diintegrasikan ke dalam repositori selalu dalam keadaan stabil dan bebas dari bug.
+   - Workflow pmd.yml dan scorecard.yml menambahkan lapisan validasi tambahan dengan melakukan analisis kode (PMD) dan memantau keamanan rantai pasok (Scorecard). Ini memperkuat proses CI dengan memastikan kode tidak hanya berfungsi dengan baik, tetapi juga aman dan berkualitas tinggi.
+
+
+2. Continuous Deployment (CD) dengan Koyeb
+   - Koyeb dapat diintegrasikan dengan GitHub untuk secara otomatis melakukan deployment setiap kali ada perubahan kode yang lolos dari tahap CI.
+   - Namun, dalam workflows yang diberikan, tidak terlihat integrasi langsung dengan Koyeb. Untuk memenuhi prinsip CD sepenuhnya, perlu menambahkan langkah deployment ke Koyeb dalam workflows GitHub Actions. Misalnya, setelah semua pengujian dan analisis selesai, saya menambahkan langkah untuk mengirim kode ke Koyeb untuk deployment otomatis.
+
+
+3. Fokus pada Delivery
+   - Saat ini, workflows seperti ci, pmd dan scorecard berfokus pada validasi kode (pengujian, analisis kode, dan keamanan), tetapi belum secara eksplisit menunjukkan langkah-langkah deployment ke Koyeb. Untuk mencapai CD yang lengkap, perlu memastikan bahwa setelah kode lolos semua validasi, kode tersebut langsung dideploy ke lingkungan produksi atau staging melalui Koyeb.
+
 # Tutorial 1
 ## Reflection 1
 *You already implemented two new features using Spring Boot. Check again your source code and evaluate the coding standards that you have learned in this module. Write clean code principles and secure coding practices that have been applied to your code. If you nd any mistake in your source code, please explain how to improve your code.*
