@@ -20,7 +20,7 @@ public class ProductController {
     public String createProduct(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";
+        return "CreateProduct";
     }
 
     @PostMapping("/create")
@@ -32,7 +32,7 @@ public class ProductController {
     @GetMapping("/list")
     public String listProduct(Model model) {
         model.addAttribute("products", productService.findAll());
-        return "productList";
+        return "ProductList";
     }
 
     // Support both GET and POST for delete to make it more flexible
@@ -53,7 +53,7 @@ public class ProductController {
         Product product = productService.findById(id);
         if (product != null) {
             model.addAttribute("product", product);
-            return "editProduct";
+            return "EditProduct";
         }
         return REDIRECT_PRODUCT_LIST;
     }
