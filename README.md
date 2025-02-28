@@ -2,6 +2,40 @@
 # 2306245030
 # Advanced Programming A
 
+# Tutorial 3
+*1. Explain what principles you apply to your project!*
+
+Dalam tutorial ini, saya menerapkan beberapa prinsip SOLID untuk meningkatkan kualitas dan maintainability kode. Prinsip utama yang saya terapkan adalah:
+- Single Responsibility Principle (SRP)
+   - Prinsip ini menekankan bahwa setiap kelas harus memiliki satu tanggung jawab saja. Saya menerapkan prinsip ini dengan memisahkan CarController dari ProductController sehingga masing-masing controller hanya bertanggung jawab untuk mengelola satu jenis entitas saja.
+
+
+- Open/Closed Principle (OCP)
+   - Kode yang telah ada tidak perlu dimodifikasi untuk penambahan fitur baru, namun tetap terbuka untuk ekstensi. Pendekatan ini telah diterapkan melalui penggunaan interface untuk service dan repository.
+
+*2. Explain the advantages of applying SOLID principles to your project with examples.*
+- Keuntungan Single Responsibility Principle:
+  - Kode Lebih Mudah Dipahami: Dengan memisahkan CarController dari ProductController, setiap controller menjadi lebih fokus dan mudah dipahami.
+  - Contoh: Sebelumnya CarController mewarisi ProductController yang menciptakan ketergantungan yang tidak perlu dan membingungkan. Sekarang, setiap controller hanya menangani satu jenis entitas, sehingga perubahan pada fitur product tidak akan mempengaruhi fitur car.
+
+
+- Keuntungan Open/Closed Principle:
+  - Kemudahan Pengembangan: Ketika perlu menambahkan fitur baru, kita tidak perlu mengubah kode yang sudah ada.
+  - Contoh: Jika ingin menambahkan entitas baru seperti Order, kita cukup membuat class baru yang mengimplementasikan interface yang ada tanpa mengubah kode di service atau repository yang sudah berjalan.
+
+
+
+*3. Explain the disadvantages of not applying SOLID principles to your project with examples.*
+- Kerugian Tidak Menerapkan Single Responsibility Principle:
+  - Kode Sulit Dipelihara: Jika controller menangani banyak tugas, perubahan pada satu fitur dapat memengaruhi fitur lain secara tidak terduga.
+  - Contoh: Dalam kode sebelumnya, CarController mewarisi ProductController, sehingga perubahan pada logika ProductController akan memengaruhi CarController. Hal ini dapat menyebabkan bug yang sulit dilacak.
+
+
+- Kerugian Tidak Menerapkan Open/Closed Principle:
+  - Kode Menjadi Fragile: Setiap kali ada fitur baru, kita perlu mengubah kode yang sudah ada, meningkatkan risiko bug.
+  - Contoh: Jika controller tidak menggunakan abstraksi service, penambahan fitur baru akan memerlukan modifikasi pada controller yang sudah ada, yang berisiko merusak fungsionalitas yang telah berjalan dengan baik.
+  - Dengan pemisahan controller untuk Car dan Product, proyek ini telah melangkah ke arah penerapan prinsip SOLID yang lebih baik, terutama dalam aspek Single Responsibility Principle, yang merupakan langkah kritis dalam perbaikan arsitektur aplikasi
+
 # Tutorial 2
 *1. List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.*
 
