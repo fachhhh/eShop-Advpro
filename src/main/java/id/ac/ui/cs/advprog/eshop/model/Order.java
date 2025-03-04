@@ -1,7 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -13,6 +12,7 @@ public class Order {
     private String author;
     private String status;
 
+    /*
     private static List<String> VALID_STATUS = Arrays.asList("WAITING_PAYMENT", "FAILED", "CANCELLED", "SUCCESS");
 
     public Order(List<Product> products, String author) {
@@ -50,4 +50,5 @@ public class Order {
         }
         this.status = status;
     }
+     */
 }
