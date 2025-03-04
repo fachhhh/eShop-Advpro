@@ -11,4 +11,10 @@ public class Order {
     private long orderTime;
     private String author;
     private String status;
+
+    public Order(String id, List<Product> products, long orderTime, String author) {
+    }
+
+    public Order(String id, List<Product> products, long orderTime, String author, String status) {
+    }
 }
