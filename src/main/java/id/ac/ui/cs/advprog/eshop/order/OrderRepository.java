@@ -1,6 +1,5 @@
-package id.ac.ui.cs.advprog.eshop.repository;
+package id.ac.ui.cs.advprog.eshop.order;
 
-import id.ac.ui.cs.advprog.eshop.model.Order;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

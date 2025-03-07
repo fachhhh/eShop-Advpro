@@ -1,5 +1,4 @@
-package id.ac.ui.cs.advprog.eshop.repository;
-import id.ac.ui.cs.advprog.eshop.model.Car;
+package id.ac.ui.cs.advprog.eshop.car;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Iterator;

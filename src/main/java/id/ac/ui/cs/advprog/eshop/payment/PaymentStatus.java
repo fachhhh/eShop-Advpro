@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.eshop.enums;
+package id.ac.ui.cs.advprog.eshop.payment;
 
 import lombok.Getter;
 
