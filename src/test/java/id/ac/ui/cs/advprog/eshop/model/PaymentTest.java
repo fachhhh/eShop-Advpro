@@ -75,4 +75,17 @@ class PaymentTest {
     void testCreatePaymentWithInvalidMethod() {
         assertThrows(IllegalArgumentException.class, () -> new Payment("PAY-003", "bitcoin", "PENDING", new HashMap<>()));
     }
+
+    // Happy path: Test updating payment data
+    @Test
+    void testUpdatePaymentData() {
+        Map<String, String> newPaymentData = new HashMap<>();
+        newPaymentData.put("bankName", "Bank ABC");
+        newPaymentData.put("accountNumber", "1234567890");
+
+        payment.setPaymentData(newPaymentData);
+        assertSame(newPaymentData, payment.getPaymentData());
+        assertEquals("Bank ABC", payment.getPaymentData().get("bankName"));
+        assertEquals("1234567890", payment.getPaymentData().get("accountNumber"));
+    }
 }
