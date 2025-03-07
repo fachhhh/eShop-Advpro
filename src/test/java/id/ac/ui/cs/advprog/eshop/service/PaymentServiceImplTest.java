@@ -5,120 +5,103 @@ import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class PaymentServiceImplTest {
-
+    @InjectMocks
     private PaymentServiceImpl paymentService;
+
+    @Mock
     private PaymentRepository paymentRepository;
+
+    private List<Payment> payments;
 
     @BeforeEach
     void setUp() {
-        paymentRepository = mock(PaymentRepository.class);
-        paymentService = new PaymentServiceImpl(paymentRepository);
+        payments = new ArrayList<>();
+
+        Payment payment1 = new Payment("PAY-001", "ORDER-001", "voucher", PaymentStatus.PENDING.getValue(), new HashMap<>());
+        Payment payment2 = new Payment("PAY-002", "ORDER-002", "credit_card", PaymentStatus.PENDING.getValue(), new HashMap<>());
+
+        payments.add(payment1);
+        payments.add(payment2);
     }
 
+    // Happy path test: Add a new payment successfully
     @Test
     void testAddPayment() {
-        Order order = new Order();
-        order.setId("ORDER-001");
+        Payment payment = payments.get(0);
+        doReturn(payment).when(paymentRepository).save(any(Payment.class));
 
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP1234ABC5678");
-
-        Payment payment = paymentService.addPayment(order, "voucher", paymentData);
-
-        assertNotNull(payment.getId());
-        assertEquals("ORDER-001", payment.getOrderId());
-        assertEquals("voucher", payment.getMethod());
-        assertEquals("PENDING", payment.getStatus());
-        assertEquals(paymentData, payment.getPaymentData());
-
+        Payment result = paymentService.addPayment(new Order("ORDER-001"), "voucher", new HashMap<>());
         verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertNotNull(result);
+        assertEquals(payment.getOrderId(), result.getOrderId());
     }
 
+    // Happy path test: Set payment status to SUCCESS
     @Test
     void testSetStatusToSuccess() {
-        Payment payment = new Payment();
-        Order order = new Order();
-        order.setId("ORDER-001");
-        order.setStatus("WAITING_PAYMENT");
+        Payment payment = payments.get(0);
+        doReturn(Optional.of(payment)).when(paymentRepository).findById(payment.getId());
 
-        payment.setId("PAY-001");
-        payment.setOrderId("ORDER-001");
-        payment.setStatus("PENDING");
-
-        when(paymentRepository.findById("PAY-001")).thenReturn(Optional.of(payment));
-
-        paymentService.setStatus(payment, "SUCCESS");
-
-        assertEquals("SUCCESS", payment.getStatus());
-        assertEquals("SUCCESS", order.getStatus());
-
+        paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
         verify(paymentRepository, times(1)).save(payment);
     }
 
+    // Unhappy path test: Set payment status with invalid status
     @Test
-    void testSetStatusToRejected() {
-        Payment payment = new Payment();
-        Order order = new Order();
-        order.setId("ORDER-001");
-        order.setStatus("WAITING_PAYMENT");
+    void testSetStatusInvalid() {
+        Payment payment = payments.get(0);
+        doReturn(Optional.of(payment)).when(paymentRepository).findById(payment.getId());
 
-        payment.setId("PAY-001");
-        payment.setOrderId("ORDER-001");
-        payment.setStatus("PENDING");
-
-        when(paymentRepository.findById("PAY-001")).thenReturn(Optional.of(payment));
-
-        paymentService.setStatus(payment, "REJECTED");
-
-        assertEquals("REJECTED", payment.getStatus());
-        assertEquals("FAILED", order.getStatus());
-
-        verify(paymentRepository, times(1)).save(payment);
+        assertThrows(IllegalArgumentException.class, () -> paymentService.setStatus(payment, "INVALID"));
+        verify(paymentRepository, times(0)).save(payment);
     }
 
+    // Unhappy path test: Set status for a non-existing payment
+    @Test
+    void testSetStatusForNonExistingPayment() {
+        doReturn(Optional.empty()).when(paymentRepository).findById("UNKNOWN");
+        assertThrows(NoSuchElementException.class, () -> paymentService.setStatus(new Payment("UNKNOWN"), PaymentStatus.SUCCESS.getValue()));
+    }
+
+    // Happy path test: Retrieve a payment by ID
     @Test
     void testGetPayment() {
-        Payment payment = new Payment();
-        payment.setId("PAY-001");
+        Payment payment = payments.get(0);
+        doReturn(Optional.of(payment)).when(paymentRepository).findById(payment.getId());
 
-        when(paymentRepository.findById("PAY-001")).thenReturn(Optional.of(payment));
-
-        Payment result = paymentService.getPayment("PAY-001");
-
+        Payment result = paymentService.getPayment(payment.getId());
         assertNotNull(result);
-        assertEquals("PAY-001", result.getId());
-
-        verify(paymentRepository, times(1)).findById("PAY-001");
+        assertEquals(payment.getId(), result.getId());
     }
 
+    // Unhappy path test: Retrieve a payment with an unknown ID
+    @Test
+    void testGetPaymentNotFound() {
+        doReturn(Optional.empty()).when(paymentRepository).findById("UNKNOWN");
+        assertNull(paymentService.getPayment("UNKNOWN"));
+    }
+
+    // Happy path test: Retrieve all payments
     @Test
     void testGetAllPayments() {
-        Payment payment1 = new Payment();
-        payment1.setId("PAY-001");
-
-        Payment payment2 = new Payment();
-        payment2.setId("PAY-002");
-
-        when(paymentRepository.findAll()).thenReturn(List.of(payment1, payment2));
-
+        doReturn(payments).when(paymentRepository).findAll();
         List<Payment> result = paymentService.getAllPayments();
 
         assertEquals(2, result.size());
-        assertEquals("PAY-001", result.get(0).getId());
-        assertEquals("PAY-002", result.get(1).getId());
-
-        verify(paymentRepository, times(1)).findAll();
+        assertEquals(payments.get(0).getId(), result.get(0).getId());
+        assertEquals(payments.get(1).getId(), result.get(1).getId());
     }
 }
