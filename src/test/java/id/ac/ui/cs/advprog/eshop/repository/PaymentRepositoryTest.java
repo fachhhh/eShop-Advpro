@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +14,7 @@ class PaymentRepositoryTest {
 
     private PaymentRepository paymentRepository;
     private Payment payment1;
+    private Payment payment2;
 
     @BeforeEach
     void setUp() {
@@ -34,10 +35,10 @@ class PaymentRepositoryTest {
     void testSaveAndRetrievePayment() {
         paymentRepository.save(payment1);
 
-        Optional<Payment> retrieved = paymentRepository.findById("PAY-001");
-        assertTrue(retrieved.isPresent());
-        assertEquals("voucher", retrieved.get().getMethod());
-        assertEquals("PENDING", retrieved.get().getStatus());
+        Payment retrieved = paymentRepository.findById("PAY-001");
+        assertNotNull(retrieved);
+        assertEquals("voucher", retrieved.getMethod());
+        assertEquals("PENDING", retrieved.getStatus());
     }
 
     // Happy path: Test updating an existing payment
@@ -47,16 +48,16 @@ class PaymentRepositoryTest {
         payment1.setStatus("SUCCESS");
         paymentRepository.save(payment1);
 
-        Optional<Payment> updatedPayment = paymentRepository.findById("PAY-001");
-        assertTrue(updatedPayment.isPresent());
-        assertEquals("SUCCESS", updatedPayment.get().getStatus());
+        Payment updatedPayment = paymentRepository.findById("PAY-001");
+        assertNotNull(updatedPayment);
+        assertEquals("SUCCESS", updatedPayment.getStatus());
     }
 
     // Unhappy path: Test retrieving a non-existent payment
     @Test
     void testFindByIdIfNotFound() {
-        Optional<Payment> result = paymentRepository.findById("INVALID-ID");
-        assertFalse(result.isPresent());
+        Payment result = paymentRepository.findById("INVALID-ID");
+        assertNull(result);
     }
 
     // Happy path: Test saving multiple payments and retrieving them
@@ -65,12 +66,30 @@ class PaymentRepositoryTest {
         paymentRepository.save(payment1);
         paymentRepository.save(payment2);
 
-        Optional<Payment> retrieved1 = paymentRepository.findById("PAY-001");
-        Optional<Payment> retrieved2 = paymentRepository.findById("PAY-002");
+        Payment retrieved1 = paymentRepository.findById("PAY-001");
+        Payment retrieved2 = paymentRepository.findById("PAY-002");
 
-        assertTrue(retrieved1.isPresent());
-        assertTrue(retrieved2.isPresent());
-        assertEquals("voucher", retrieved1.get().getMethod());
-        assertEquals("credit_card", retrieved2.get().getMethod());
+        assertNotNull(retrieved1);
+        assertNotNull(retrieved2);
+        assertEquals("voucher", retrieved1.getMethod());
+        assertEquals("credit_card", retrieved2.getMethod());
+    }
+
+    // Happy path: Test finding all payments by method
+    @Test
+    void testFindAllByMethod() {
+        paymentRepository.save(payment1);
+        paymentRepository.save(payment2);
+
+        List<Payment> vouchers = paymentRepository.findAllByMethod("voucher");
+        List<Payment> creditCards = paymentRepository.findAllByMethod("credit_card");
+        List<Payment> bankTransfers = paymentRepository.findAllByMethod("bank_transfer");
+
+        assertEquals(1, vouchers.size());
+        assertEquals(1, creditCards.size());
+        assertEquals(0, bankTransfers.size());
+
+        assertEquals("voucher", vouchers.get(0).getMethod());
+        assertEquals("credit_card", creditCards.get(0).getMethod());
     }
 }
