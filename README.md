@@ -6,10 +6,10 @@
 Dalam Tutorial 4, saya menerapkan prinsip-prinsip Test-Driven Development (TDD) dan Refactoring untuk meningkatkan kualitas dan maintainability kode. Secara singkat:
 
 - Penerapan TDD:
-    Saya mengikuti siklus RED-GREEN-REFACTOR untuk memberikan umpan balik cepat dan memastikan bahwa setiap fitur baru didukung oleh unit test. Hal ini membantu dalam mendeteksi bug sejak dini dan mempermudah proses refactoring.
+  - Saya mengikuti siklus RED-GREEN-REFACTOR untuk memberikan umpan balik cepat dan memastikan bahwa setiap fitur baru didukung oleh unit test. Hal ini membantu dalam mendeteksi bug sejak dini dan mempermudah proses refactoring.
 
 - Refactoring:
-Dengan melakukan refactoring secara berkala, kode menjadi lebih modular, mudah dibaca, dan lebih mudah untuk dikembangkan di masa depan. Penerapan refactoring juga mendukung penerapan prinsip Clean Code dan SOLID.
+  - Dengan melakukan refactoring secara berkala, kode menjadi lebih modular, mudah dibaca, dan lebih mudah untuk dikembangkan di masa depan. Penerapan refactoring juga mendukung penerapan prinsip Clean Code dan SOLID.
 
 Pembelajaran dan Peningkatan:
 Meskipun TDD memberikan banyak manfaat, saya menyadari pentingnya memperluas cakupan pengujian, terutama untuk edge case, serta memastikan setiap test terisolasi dengan baik. Hal ini menjadi fokus perbaikan di proyek-proyek mendatang.
