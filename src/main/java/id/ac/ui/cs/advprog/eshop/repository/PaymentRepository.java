@@ -10,17 +10,18 @@ import java.util.List;
 public class PaymentRepository {
     private final List<Payment> paymentData = new ArrayList<>();
 
-    public void save(Payment payment) {
+    public Payment save(Payment payment) {
         int i = 0;
         for (Payment savedPayment : paymentData) {
             if (savedPayment.getId().equals(payment.getId())) {
                 paymentData.set(i, payment);
-                return;
+                return savedPayment;
             }
             i++;
         }
 
         paymentData.add(payment);
+        return payment;
     }
 
     public Payment findById(String id) {
