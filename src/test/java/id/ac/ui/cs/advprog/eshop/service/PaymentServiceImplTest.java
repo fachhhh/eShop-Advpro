@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
@@ -29,8 +30,12 @@ class PaymentServiceImplTest {
     void setUp() {
         payments = new ArrayList<>();
 
-        Payment payment1 = new Payment("PAY-001", "ORDER-001", "voucher", PaymentStatus.PENDING.getValue(), new HashMap<>());
-        Payment payment2 = new Payment("PAY-002", "ORDER-002", "credit_card", PaymentStatus.PENDING.getValue(), new HashMap<>());
+        // Using the correct constructor without status parameter
+        Map<String, String> paymentData1 = new HashMap<>();
+        Payment payment1 = new Payment("PAY-001", "ORDER-001", "voucher", paymentData1);
+
+        Map<String, String> paymentData2 = new HashMap<>();
+        Payment payment2 = new Payment("PAY-002", "ORDER-002", "credit_card", paymentData2);
 
         payments.add(payment1);
         payments.add(payment2);
@@ -72,8 +77,11 @@ class PaymentServiceImplTest {
     // Unhappy path test: Set status for a non-existing payment
     @Test
     void testSetStatusForNonExistingPayment() {
+        Payment nonExistingPayment = new Payment("UNKNOWN", "ORDER-UNKNOWN", "voucher", new HashMap<>());
         doReturn(Optional.empty()).when(paymentRepository).findById("UNKNOWN");
-        assertThrows(NoSuchElementException.class, () -> paymentService.setStatus(new Payment("UNKNOWN"), PaymentStatus.SUCCESS.getValue()));
+
+        assertThrows(IllegalStateException.class, () ->
+                paymentService.setStatus(nonExistingPayment, PaymentStatus.SUCCESS.getValue()));
     }
 
     // Happy path test: Retrieve a payment by ID

@@ -56,8 +56,8 @@ class PaymentRepositoryTest {
     // Unhappy path: Test retrieving a non-existent payment
     @Test
     void testFindByIdIfNotFound() {
-        Payment result = paymentRepository.findById("INVALID-ID");
-        assertNull(result);
+        Optional<Payment> result = paymentRepository.findById("INVALID-ID");
+        assertTrue(result.isEmpty());
     }
 
     // Happy path: Test saving multiple payments and retrieving them

@@ -20,7 +20,7 @@ class PaymentTest {
 
         payment = new Payment(
                 "PAY-001",
-                "voucher",
+                "ORDER-001",
                 "PENDING",
                 paymentData
         );

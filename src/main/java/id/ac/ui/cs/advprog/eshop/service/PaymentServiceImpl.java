@@ -1,6 +1,8 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
@@ -9,22 +11,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
+    private final OrderService orderService;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
+    @Autowired
+    public PaymentServiceImpl(PaymentRepository paymentRepository, OrderService orderService) {
         this.paymentRepository = paymentRepository;
+        this.orderService = orderService;
     }
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        Payment payment = new Payment(UUID.randomUUID().toString(), order.getId(), method, PaymentStatus.PENDING.getValue(), paymentData);
+        Payment payment = new Payment(
+                UUID.randomUUID().toString(),
+                order.getId(),
+                method,
+                paymentData
+        );
+        payment.setStatus(PaymentStatus.PENDING.getValue());
         return paymentRepository.save(payment);
     }
 
@@ -34,27 +43,26 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("Invalid payment status: " + status);
         }
 
-        Optional<Payment> existingPayment = paymentRepository.findById(payment.getId());
-        if (existingPayment.isEmpty()) {
+        // Change this part to handle non-Optional return type
+        Payment existingPayment = paymentRepository.findById(payment.getId());
+        if (existingPayment == null) {
             throw new IllegalStateException("Payment not found: " + payment.getId());
         }
 
-        payment.setStatus(status);
+        existingPayment.setStatus(status);
 
-        // Update order status based on payment status
         if (status.equals(PaymentStatus.SUCCESS.getValue())) {
-            // Assume we have an OrderService to update order status
-            // OrderService.updateStatus(payment.getOrderId(), OrderStatus.SUCCESS.getValue());
+            orderService.updateStatus(existingPayment.getOrderId(), OrderStatus.SUCCESS.getValue());
         } else if (status.equals(PaymentStatus.REJECTED.getValue())) {
-            // OrderService.updateStatus(payment.getOrderId(), OrderStatus.FAILED.getValue());
+            orderService.updateStatus(existingPayment.getOrderId(), OrderStatus.FAILED.getValue());
         }
 
-        return paymentRepository.save(payment);
+        return paymentRepository.save(existingPayment);
     }
 
     @Override
     public Payment getPayment(String paymentId) {
-        return paymentRepository.findById(paymentId).orElse(null);
+        return paymentRepository.findById(paymentId);
     }
 
     @Override
