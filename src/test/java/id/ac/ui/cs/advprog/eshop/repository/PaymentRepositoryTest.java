@@ -22,12 +22,14 @@ class PaymentRepositoryTest {
 
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP1234ABC5678");
-        payment1 = new Payment("PAY-001", "voucher", "PENDING", paymentData1);
+        // Fixed: Changed constructor call to match actual implementation
+        payment1 = new Payment("PAY-001", "ORDER-001", "voucher", paymentData1);
 
         Map<String, String> paymentData2 = new HashMap<>();
         paymentData2.put("cardNumber", "4111111111111111");
         paymentData2.put("expiryDate", "12/25");
-        payment2 = new Payment("PAY-002", "credit_card", "PENDING", paymentData2);
+        // Fixed: Changed constructor call to match actual implementation
+        payment2 = new Payment("PAY-002", "ORDER-002", "credit_card", paymentData2);
     }
 
     // Happy path: Test saving a new payment and retrieving it
@@ -56,8 +58,8 @@ class PaymentRepositoryTest {
     // Unhappy path: Test retrieving a non-existent payment
     @Test
     void testFindByIdIfNotFound() {
-        Optional<Payment> result = paymentRepository.findById("INVALID-ID");
-        assertTrue(result.isEmpty());
+        Payment result = paymentRepository.findById("INVALID-ID");
+        assertNull(result);
     }
 
     // Happy path: Test saving multiple payments and retrieving them

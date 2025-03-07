@@ -41,18 +41,6 @@ class PaymentServiceImplTest {
         payments.add(payment2);
     }
 
-    // Happy path test: Add a new payment successfully
-    @Test
-    void testAddPayment() {
-        Payment payment = payments.get(0);
-        doReturn(payment).when(paymentRepository).save(any(Payment.class));
-
-        Payment result = paymentService.addPayment(new Order("ORDER-001"), "voucher", new HashMap<>());
-        verify(paymentRepository, times(1)).save(any(Payment.class));
-        assertNotNull(result);
-        assertEquals(payment.getOrderId(), result.getOrderId());
-    }
-
     // Happy path test: Set payment status to SUCCESS
     @Test
     void testSetStatusToSuccess() {

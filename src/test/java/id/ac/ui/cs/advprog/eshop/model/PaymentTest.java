@@ -21,7 +21,7 @@ class PaymentTest {
         payment = new Payment(
                 "PAY-001",
                 "ORDER-001",
-                "PENDING",
+                "voucher",  // Changed from "PENDING" to "voucher" as method
                 paymentData
         );
     }
@@ -31,7 +31,7 @@ class PaymentTest {
     void testCreatePaymentDefaultValues() {
         assertEquals("PAY-001", payment.getId());
         assertEquals("voucher", payment.getMethod());
-        assertEquals("PENDING", payment.getStatus());
+        assertEquals("PENDING", payment.getStatus());  // Status should be auto-set to PENDING
         assertSame(paymentData, payment.getPaymentData());
     }
 
@@ -62,7 +62,12 @@ class PaymentTest {
         ccData.put("cardNumber", "4111111111111111");
         ccData.put("expiryDate", "12/25");
 
-        Payment creditCardPayment = new Payment("PAY-002", "credit_card", "PENDING", ccData);
+        Payment creditCardPayment = new Payment(
+                "PAY-002",
+                "ORDER-002",  // Added orderId
+                "credit_card",
+                ccData
+        );
 
         assertEquals("PAY-002", creditCardPayment.getId());
         assertEquals("credit_card", creditCardPayment.getMethod());
@@ -73,7 +78,8 @@ class PaymentTest {
     // Unhappy path: Test creating a payment with an unsupported method
     @Test
     void testCreatePaymentWithInvalidMethod() {
-        assertThrows(IllegalArgumentException.class, () -> new Payment("PAY-003", "bitcoin", "PENDING", new HashMap<>()));
+        assertThrows(IllegalArgumentException.class, () ->
+                new Payment("PAY-003", "ORDER-003", "bitcoin", new HashMap<>()));
     }
 
     // Happy path: Test updating payment data
