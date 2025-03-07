@@ -51,4 +51,26 @@ class PaymentRepositoryTest {
         assertTrue(updatedPayment.isPresent());
         assertEquals("SUCCESS", updatedPayment.get().getStatus());
     }
+
+    // Unhappy path: Test retrieving a non-existent payment
+    @Test
+    void testFindByIdIfNotFound() {
+        Optional<Payment> result = paymentRepository.findById("INVALID-ID");
+        assertFalse(result.isPresent());
+    }
+
+    // Happy path: Test saving multiple payments and retrieving them
+    @Test
+    void testSaveMultiplePayments() {
+        paymentRepository.save(payment1);
+        paymentRepository.save(payment2);
+
+        Optional<Payment> retrieved1 = paymentRepository.findById("PAY-001");
+        Optional<Payment> retrieved2 = paymentRepository.findById("PAY-002");
+
+        assertTrue(retrieved1.isPresent());
+        assertTrue(retrieved2.isPresent());
+        assertEquals("voucher", retrieved1.get().getMethod());
+        assertEquals("credit_card", retrieved2.get().getMethod());
+    }
 }
